@@ -9,8 +9,8 @@ def optimal_strategy(n, arr):
             j = i + length - 1
             mapping[i][j] = max(arr[i] - mapping[i+1][j], arr[j] - mapping[i][j-1])
 
-    for x in mapping:
-        print(x)
+    #for x in mapping:
+        #print(x)
 
     # Determine the winner
     if mapping[0][n-1] > 0:
