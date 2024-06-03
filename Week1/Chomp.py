@@ -42,7 +42,7 @@ def get_winning_sequence(position):
 n = int(input("Enter the number of rows: "))
 position = []
 for _ in range(n):
-    row = int(input(f"Enter the number of cookies in row {_+1}: "))
+    row = int(input(f"Enter the number of blocks in row {_+1}: "))
     position.append(row)
 
 # Get the winning sequence of moves
