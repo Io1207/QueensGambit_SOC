@@ -1,140 +1,111 @@
-# A Python3 program to implement Game of Nim. The program
-# assumes that both players are playing optimally
-import random
+import random as rand
 
-COMPUTER = 1
+COMPUTER = 1 #an attempt to appease AI in case it takes over the world
 HUMAN = 2
 
-# A Structure to hold the two parameters of a move
-
-# move has two parameters-
-# 1) pile_index = The index of pile from which stone is
+# move has two attributes-
+# 1) pileIndex = The index of pile from which ctick(s) is
 #				 going to be removed
-# 2) stones_removed = Number of stones removed from the
-#					 pile indexed = pile_index */
-
+# 2) stickszRemoved = Number of sticks removed from the
+#					 pile indexed = pileIndex 
 
 class move:
 
 	def __init__(self):
 
-		self.pile_index = 0
-		self.stones_removed = 0
+		self.pileIndex = 0
+		self.sticksTaken = 0
 
 
-# piles[] -> Array having the initial count of stones/coins
-#		 in each piles before the game has started.
-# n	 -> Number of piles
 
-# The piles[] are having 0-based indexing
-
-# A function to output the current game state.
-def showPiles(piles, n):
-	print("Current Game Status -> ")
+# A function to see the current game state.
+def showPiles(piles):  #initial state of the game(no of sticks in the pile)
 	print(*piles)
 
-# A function that returns True if game has ended and
-# False if game is not yet over
-def gameOver(piles, n):
+
+def gameEnd(piles, n):
 	for i in range(n):
 		if (piles[i] != 0):
-			return False
+			return False #game goes on
 
-	return True
+	return True #game ended
 
-# A function to declare the winner of the game
-def declareWinner(whoseTurn):
+#call this function only if sticks in each pile is over
+def winnerWinnerChickerDinner(whoseTurn): #I am a vegetarian and I still wrote this
 	if (whoseTurn == COMPUTER):
-		print("\nHUMAN won")
+		print("You won given that you are not the computer")
 	else:
-		print("\nCOMPUTER won")
+		print("Computer won")
 	return
 
-
-# A function to calculate the Nim-Sum at any point
-# of the game.
+#calculating nim-sum
 def calculateNimSum(piles, n):
 	nimsum = piles[0]
 	for i in range(1, n):
-		nimsum = nimsum ^ piles[i]
+		nimsum = nimsum ^ piles[i]   #it helps to remember your school comp textbook at times. ^ is XOR
 	return nimsum
 
 # A function to make moves of the Nim Game
 def makeMove(piles, n, moves):
-	nim_sum = calculateNimSum(piles, n)
+	nimSum = calculateNimSum(piles, n)
 
-	# The player having the current turn is on a winning
-	# position. So he/she/it play optimally and tries to make
-	# Nim-Sum as 0
-	if (nim_sum != 0):
+	# Trying to make the num-sum 0
+	if (nimSum != 0):
 		for i in range(n):
 
-			# If this is not an illegal move
-			# then make this move.
-			if ((piles[i] ^ nim_sum) < piles[i]):
+			#If can move, move
+			if ((piles[i] ^ nimSum) < piles[i]): #removing the sticks st nim sum still zero
 
-				moves.pile_index = i
-				moves.stones_removed = piles[i]-(piles[i] ^ nim_sum)
-				piles[i] = (piles[i] ^ nim_sum)
+				moves.pileIndex = i
+				moves.stones_removed = piles[i]-(piles[i] ^ nimSum)
+				piles[i] = (piles[i] ^ nimSum)
 				break
 
-	# The player having the current turn is on losing
-	# position, so he/she/it can only wait for the opponent
-	# to make a mistake(which doesn't happen in this program
-	# as both players are playing optimally). He randomly
-	# choose a non-empty pile and randomly removes few stones
-	# from it. If the opponent doesn't make a mistake,then it
-	# doesn't matter which pile this player chooses, as he is
-	# destined to lose this game.
-
-	# If you want to input yourself then remove the rand()
-	# functions and modify the code to take inputs.
-	# But remember, you still won't be able to change your
-	# fate/prediction.
+	# Dear player on the losing side, this is for you
 	else:
-		# Create an array to hold indices of non-empty piles
-		non_zero_indices = [None for _ in range(n)]
+		
+		filledPileIndex = [None for _ in range(n)]
 		count = 0
 		for i in range(n):
 			if (piles[i] > 0):
-				non_zero_indices[count] = i
+				filledPileIndex[count] = i
 				count += 1
 
-		moves.pile_index = int(random.random() * (count))
+		moves.pileIndex = int(rand.random() * (count))
 		moves.stones_removed = 1 + \
-			int(random.random() * (piles[moves.pile_index]))
-		piles[moves.pile_index] -= moves.stones_removed
+			int(rand.random() * (piles[moves.pileIndex]))
+		piles[moves.pileIndex] -= moves.stones_removed
 
-		if (piles[moves.pile_index] < 0):
-			piles[moves.pile_index] = 0
+		if (piles[moves.pileIndex] < 0):
+			piles[moves.pileIndex] = 0
 
 	return
 
-# A C function to play the Game of Nim
+#In case you wish to play the game, I am a very compectitive person, I will keep computer as the first player
 def playGame(piles, n, whoseTurn):
-	print("\nGAME STARTS")
+	print("staring the game now")
 	moves = move()
 
-	while (gameOver(piles, n) == False):
+	while (gameEnd(piles, n) == False):
 		showPiles(piles, n)
 		makeMove(piles, n, moves)
 
 		if (whoseTurn == COMPUTER):
 
 			print("COMPUTER removes", moves.stones_removed,
-				"stones from pile at index ", moves.pile_index)
+				"stones from pile at index ", moves.pileIndex)
 			whoseTurn = HUMAN
 
 		else:
 			print("HUMAN removes", moves.stones_removed,
-				"stones from pile at index", moves.pile_index)
+				"stones from pile at index", moves.pileIndex)
 			whoseTurn = COMPUTER
 
 	showPiles(piles, n)
-	declareWinner(whoseTurn)
+	winnerWinnerChickerDinner(whoseTurn)
 	return
 
-def knowWinnerBeforePlaying(piles, n, whoseTurn):
+def predictWinner(piles, n, whoseTurn):
 	print("Prediction before playing the game -> ", end="")
 	if (calculateNimSum(piles, n) != 0):
 
@@ -152,18 +123,9 @@ def knowWinnerBeforePlaying(piles, n, whoseTurn):
 
 	return
 
-# Driver program to test above functions
+##Mic Testing 1,2,3
 
-# Test Case 1
-piles = [1, 3, 5, 7]
-n = len(piles)
+#piles = [1, 3, 5, 7]
+#n = len(piles)
 
-# We will predict the results before playing
-# The COMPUTER starts first
-knowWinnerBeforePlaying(piles, n, COMPUTER)
-
-# Let us play the game with COMPUTER starting first
-# and check whether our prediction was right or not
-#playGame(piles, n, COMPUTER)
-
-# This code is contributed by phasing17
+#predictWinner(piles, n, COMPUTER)
