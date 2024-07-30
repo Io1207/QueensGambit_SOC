@@ -5,6 +5,9 @@ Week1: Nim, Chomp, Pawnscape and GoN solve the questions given  [Update:pawnscap
 <br>
 <br>
 Week2: Readings on game theory, algorithms/concepts involved(?, sequential and simulataneous move games), noraml form game representation. Tic-Tac-Toe assignment [->Readings done, assignment started]
-<br>
-<br>
-Week3: engine made but wasn't able to extract puzzles from websites
+Week3: Had to make an engine that was able to solve mate in 2 or mate in 3 puzzles using alpha beta pruning.
+Week4 to Week7: Built chess engine present in submittingIt folder. Key Aspects explained below.
+- UCI compatible
+- Evaluation function takes into account possible checkmates then checks with capture, and then checks. Rest of the moves are ordered based on the material advantage they result in and the captures they make, etc.
+- Utility of each square for different pieces also incorporated (thanks to Kunal sir for the values)
+- Transposition matrix implemented.
